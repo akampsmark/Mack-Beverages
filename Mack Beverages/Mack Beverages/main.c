@@ -10,7 +10,8 @@
 
 int main(void)
 {
-    /* Replace with your application code */
+    /* Main coursework code*/
+	
     while (1) 
     {
     }
