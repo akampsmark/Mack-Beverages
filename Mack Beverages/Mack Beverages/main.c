@@ -26,10 +26,16 @@ int main(void)
     //while (1) 
     //{
 		PORTD &=~(1<<rs);
-		PORTE = 0xff;
+		PORTE = 0x0f;
 		latch();
 		PORTD |=(1<<rs);
+		
+		PORTD &= ~(1<<rw);
 		PORTE = 'A';
+		latch();
+		PORTE = 'M';
+		latch();
+		PORTE = 'k';
 		latch();
 		
 		

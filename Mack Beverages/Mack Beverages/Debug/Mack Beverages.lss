@@ -3,29 +3,29 @@ Mack Beverages.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  00800100  00000122  2**0
+  0 .data         00000000  00800100  00800100  00000132  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000000ce  00000000  00000000  00000054  2**1
+  1 .text         000000de  00000000  00000000  00000054  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .comment      00000030  00000000  00000000  00000122  2**0
+  2 .comment      00000030  00000000  00000000  00000132  2**0
                   CONTENTS, READONLY
-  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000154  2**2
+  3 .note.gnu.avr.deviceinfo 0000003c  00000000  00000000  00000164  2**2
                   CONTENTS, READONLY
-  4 .debug_aranges 00000028  00000000  00000000  00000190  2**0
+  4 .debug_aranges 00000028  00000000  00000000  000001a0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .debug_info   000008b4  00000000  00000000  000001b8  2**0
+  5 .debug_info   000008c6  00000000  00000000  000001c8  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_abbrev 000007f4  00000000  00000000  00000a6c  2**0
+  6 .debug_abbrev 000007f4  00000000  00000000  00000a8e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   000002c8  00000000  00000000  00001260  2**0
+  7 .debug_line   000002e6  00000000  00000000  00001282  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000034  00000000  00000000  00001528  2**2
+  8 .debug_frame  00000034  00000000  00000000  00001568  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000420  00000000  00000000  0000155c  2**0
+  9 .debug_str    00000420  00000000  00000000  0000159c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    00000048  00000000  00000000  0000197c  2**0
+ 10 .debug_loc    00000048  00000000  00000000  000019bc  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000018  00000000  00000000  000019c4  2**0
+ 11 .debug_ranges 00000018  00000000  00000000  00001a04  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -110,7 +110,7 @@ Disassembly of section .text:
   94:	de bf       	out	0x3e, r29	; 62
   96:	cd bf       	out	0x3d, r28	; 61
   98:	0b d0       	rcall	.+22     	; 0xb0 <main>
-  9a:	17 c0       	rjmp	.+46     	; 0xca <_exit>
+  9a:	1f c0       	rjmp	.+62     	; 0xda <_exit>
 
 0000009c <__bad_interrupt>:
   9c:	b1 cf       	rjmp	.-158    	; 0x0 <__vectors>
@@ -156,27 +156,41 @@ int main(void)
     //{
 		PORTD &=~(1<<rs);
   b6:	90 98       	cbi	0x12, 0	; 18
-		PORTE = 0xff;
+		PORTE = 0x0f;
+  b8:	8f e0       	ldi	r24, 0x0F	; 15
 		latch();
-  b8:	83 b9       	out	0x03, r24	; 3
+  ba:	83 b9       	out	0x03, r24	; 3
 		PORTD |=(1<<rs);
-  ba:	f1 df       	rcall	.-30     	; 0x9e <latch>
+  bc:	f0 df       	rcall	.-32     	; 0x9e <latch>
+		
+		PORTD &= ~(1<<rw);
+  be:	90 9a       	sbi	0x12, 0	; 18
 		PORTE = 'A';
-  bc:	90 9a       	sbi	0x12, 0	; 18
+  c0:	91 98       	cbi	0x12, 1	; 18
 		latch();
-  be:	81 e4       	ldi	r24, 0x41	; 65
-  c0:	83 b9       	out	0x03, r24	; 3
+  c2:	81 e4       	ldi	r24, 0x41	; 65
+		PORTE = 'M';
+  c4:	83 b9       	out	0x03, r24	; 3
+		latch();
+  c6:	eb df       	rcall	.-42     	; 0x9e <latch>
+		PORTE = 'k';
+  c8:	8d e4       	ldi	r24, 0x4D	; 77
+  ca:	83 b9       	out	0x03, r24	; 3
+		latch();
+  cc:	e8 df       	rcall	.-48     	; 0x9e <latch>
+  ce:	8b e6       	ldi	r24, 0x6B	; 107
 		
 		
     //}
 }
-  c2:	ed df       	rcall	.-38     	; 0x9e <latch>
-  c4:	80 e0       	ldi	r24, 0x00	; 0
-  c6:	90 e0       	ldi	r25, 0x00	; 0
-  c8:	08 95       	ret
+  d0:	83 b9       	out	0x03, r24	; 3
+  d2:	e5 df       	rcall	.-54     	; 0x9e <latch>
+  d4:	80 e0       	ldi	r24, 0x00	; 0
+  d6:	90 e0       	ldi	r25, 0x00	; 0
+  d8:	08 95       	ret
 
-000000ca <_exit>:
-  ca:	f8 94       	cli
+000000da <_exit>:
+  da:	f8 94       	cli
 
-000000cc <__stop_program>:
-  cc:	ff cf       	rjmp	.-2      	; 0xcc <__stop_program>
+000000dc <__stop_program>:
+  dc:	ff cf       	rjmp	.-2      	; 0xdc <__stop_program>
